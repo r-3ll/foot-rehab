@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foot Rehab Routine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:          #f7f8fa;
+    --card:        #ffffff;
+    --border:      #e4e7ec;
+    --border-mid:  #d0d5dd;
+    --text:        #1d2433;
+    --text-2:      #4a5568;
+    --muted:       #8a94a6;
+    --green:       #0e9f6e;
+    --green-bg:    #e6f6f0;
+    --green-bd:    #b5e3d2;
+    --blue:        #2563eb;
+    --blue-bg:     #eaf1fe;
+    --blue-bd:     #c3d7fb;
+    --amber:       #b45309;
+    --amber-bg:    #fdf3e7;
+    --amber-bd:    #f3ddc0;
+    --red:         #b91c1c;
+    --red-bg:      #fdecec;
+    --red-bd:      #f5c6c6;
+    --shadow:      0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    padding-bottom: 72px;
+  }
+
+  .wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  /* ── Header ── */
+  header {
+    padding: 48px 0 28px;
+  }
+
+  .eyebrow {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 8px;
+  }
+
+  h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .subtitle {
+    margin-top: 6px;
+    color: var(--text-2);
+    font-size: 14px;
+  }
+
+  /* ── Progress card ── */
+  .progress-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 20px 24px;
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .progress-left { flex: 1; }
+
+  .progress-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-2);
+    margin-bottom: 10px;
+  }
+
+  .progress-bar-track {
+    height: 8px;
+    background: var(--border);
+    border-radius: 99px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--green);
+    border-radius: 99px;
+    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .progress-num {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .progress-num span {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .reset-btn {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-2);
+    background: var(--card);
+    border: 1px solid var(--border-mid);
+    border-radius: 8px;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .reset-btn:hover { background: var(--bg); border-color: var(--muted); }
+
+  /* ── Section ── */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin: 36px 0 14px;
+  }
+
+  .section-head h2 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .section-freq {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+
+  .subgroup {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 22px 0 10px 4px;
+  }
+
+  /* ── Exercise cards ── */
+  .ex {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color 0.15s;
+  }
+
+  .ex:hover { border-color: var(--border-mid); }
+
+  .ex-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px 20px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* checkbox */
+  .check {
+    width: 22px; height: 22px;
+    border: 1.5px solid var(--border-mid);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .check svg {
+    width: 12px; height: 12px;
+    stroke: #fff;
+    stroke-width: 2.5;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .check.checked {
+    background: var(--green);
+    border-color: var(--green);
+  }
+
+  .check.checked svg { opacity: 1; }
+
+  .ex-title-block { flex: 1; min-width: 0; }
+
+  .ex-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -0.01em;
+  }
+
+  .ex.completed .ex-name {
+    color: var(--muted);
+    text-decoration: line-through;
+  }
+
+  .ex-meta {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+
+  .chevron {
+    color: var(--muted);
+    flex-shrink: 0;
+    transition: transform 0.25s ease;
+  }
+
+  .ex.open .chevron { transform: rotate(180deg); }
+
+  /* badges */
+  .badge {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 3px 9px;
+    border-radius: 99px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-hold { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-bd); }
+  .badge-band { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-bd); }
+
+  /* body */
+  .ex-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ex.open .ex-body { max-height: 700px; }
+
+  .ex-body-inner {
+    padding: 18px 20px 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* protocol pills */
+  .protocol {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .pill {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    text-align: center;
+  }
+
+  .pill-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .pill-value {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin-top: 1px;
+  }
+
+  .ex-description {
+    font-size: 14px;
+    color: var(--text-2);
+    line-height: 1.65;
+    margin-bottom: 14px;
+  }
+
+  .ex-description:last-child { margin-bottom: 0; }
+
+  /* callouts */
+  .callout {
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 13px;
+    line-height: 1.55;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .callout svg { flex-shrink: 0; margin-top: 2px; }
+
+  .callout-warn {
+    background: var(--amber-bg);
+    border: 1px solid var(--amber-bd);
+    color: var(--amber);
+  }
+
+  .callout-hold {
+    background: var(--red-bg);
+    border: 1px solid var(--red-bd);
+    color: var(--red);
+  }
+
+  /* video link */
+  .video-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--blue);
+    text-decoration: none;
+    padding: 8px 14px;
+    background: var(--blue-bg);
+    border: 1px solid var(--blue-bd);
+    border-radius: 8px;
+    transition: background 0.15s;
+  }
+
+  .video-link:hover { background: #dce9fd; }
+
+  .video-link svg { width: 14px; height: 14px; fill: currentColor; }
+
+  /* footer */
+  .footer-note {
+    margin-top: 40px;
+    padding: 18px 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--text-2);
+    line-height: 1.7;
+  }
+
+  .footer-note strong { color: var(--text); font-weight: 600; }
+
+  @media (max-width: 480px) {
+    h1 { font-size: 24px; }
+    .ex-header { padding: 14px 16px; }
+    .ex-body-inner { padding: 16px 16px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Prescribed 2 June 2026</p>
+  <h1>Foot Rehab Routine</h1>
+  <p class="subtitle">Insertional Achilles tendinopathy and plantar fasciitis programme</p>
+</header>
+
+<!-- ── Progress ── -->
+<div class="progress-card">
+  <div class="progress-left">
+    <div class="progress-label">Today's progress</div>
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="bar"></div></div>
+  </div>
+  <div class="progress-num" id="count">0<span> / 10</span></div>
+  <button class="reset-btn" onclick="resetAll()">Reset</button>
+</div>
+
+<!-- ════════════ DAILY REHAB ════════════ -->
+<div class="section-head">
+  <h2>Daily Rehab</h2>
+  <span class="section-freq">Twice daily · every day</span>
+</div>
+
+<!-- Towel Curls -->
+<div class="ex" id="ex-0">
+  <div class="ex-header" onclick="toggle(0)">
+    <div class="check" id="cb-0" onclick="event.stopPropagation(); toggleCheck(0)">
+      <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8 10.5,1.5"/></svg>
+    </div>
+    <div class="ex-title-block">
+      <div class="ex-name">Towel Curls</div>
+      <div class="ex-meta">3 sets × 10 reps · both feet</div>
+    </div>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Sets</div><div class="pill-value">3</div></div>
+        <div class="pill"><div class="pill-label">Reps</div><div class="pill-value">10</div></div>
+        <div class="pill"><div class="pill-label">Rest</div><div class="pill-value">30s</div></div>
+        <div class="pill"><div class="pill-label">Feet</div><div class="pill-value">Both</div></div>
+      </div>
+      <p class="ex-description">Sit with a small towel under your foot, heel on the floor. Curl your toes to draw the towel toward you. Keep the heel down the whole time. Slow and controlled.</p>
+      <a class="video-link" href="https://www.youtube.com/watch?v=RVbYKwWwauU" target="_blank">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.3 8.3l-4.7 3c-.1.1-.3.1-.4.1-.1 0-.2 0-.3-.1-.2-.1-.3-.3-.3-.5V5.2c0-.2.1-.4.3-.5.2-.1.4-.1.6 0l4.7 3c.2.1.3.3.3.5s-.1.4-.2.6z"/></svg>
+        Watch video
+      </a>
+    </div>
+  </div>
+</div>
+
+<p class="subgroup">Foot Intrinsics</p>
+
+<!-- Four Little Toes Lift -->
+<div class="ex" id="ex-1">
+  <div class="ex-header" onclick="toggle(1)">
+    <div class="check" id="cb-1" onclick="event.stopPropagation(); toggleCheck(1)">
+      <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8 10.5,1.5"/></svg>
+    </div>
+    <div class="ex-title-block">
+      <div class="ex-name">Four Little Toes Lift</div>
+      <div class="ex-meta">3 sets × 10 reps · both feet</div>
+    </div>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Sets</div><div class="pill-value">3</div></div>
+        <div class="pill"><div class="pill-label">Reps</div><div class="pill-value">10</div></div>
+        <div class="pill"><div class="pill-label">Rest</div><div class="pill-value">30s</div></div>
+        <div class="pill"><div class="pill-label">Feet</div><div class="pill-value">Both</div></div>
+      </div>
+      <p class="ex-description">Foot flat on the floor. Lift the four little toes while the big toe stays pressed down. Lower slowly. Harder than it sounds -- use your hand to hold the big toe down at first if needed.</p>
+      <a class="video-link" href="https://www.youtube.com/shorts/8qHB-z-lfoY" target="_blank">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.3 8.3l-4.7 3c-.1.1-.3.1-.4.1-.1 0-.2 0-.3-.1-.2-.1-.3-.3-.3-.5V5.2c0-.2.1-.4.3-.5.2-.1.4-.1.6 0l4.7 3c.2.1.3.3.3.5s-.1.4-.2.6z"/></svg>
+        Watch video
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Big Toe Lift -->
+<div class="ex" id="ex-2">
+  <div class="ex-header" onclick="toggle(2)">
+    <div class="check" id="cb-2" onclick="event.stopPropagation(); toggleCheck(2)">
+      <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8 10.5,1.5"/></svg>
+    </div>
+    <div class="ex-title-block">
+      <div class="ex-name">Big Toe Lift</div>
+      <div class="ex-meta">3 sets × 10 reps · both feet</div>
+    </div>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Sets</div><div class="pill-value">3</div></div>
+        <div class="pill"><div class="pill-label">Reps</div><div class="pill-value">10</div></div>
+        <div class="pill"><div class="pill-label">Rest</div><div class="pill-value">30s</div></div>
+        <div class="pill"><div class="pill-label">Feet</div><div class="pill-value">Both</div></div>
+      </div>
+      <p class="ex-description">Foot flat on the floor. Lift only the big toe while the four little toes stay pressed down. Lower slowly. If the little toes keep lifting, hold them down with your hand until the movement pattern develops.</p>
+      <a class="video-link" href="https://www.youtube.com/shorts/8qHB-z-lfoY" target="_blank">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.3 8.3l-4.7 3c-.1.1-.3.1-.4.1-.1 0-.2 0-.3-.1-.2-.1-.3-.3-.3-.5V5.2c0-.2.1-.4.3-.5.2-.1.4-.1.6 0l4.7 3c.2.1.3.3.3.5s-.1.4-.2.6z"/></svg>
+        Watch video
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Big Toe Abduction -->
+<div class="ex" id="ex-3">
+  <div class="ex-header" onclick="toggle(3)">
+    <div class="check" id="cb-3" onclick="event.stopPropagation(); toggleCheck(3)">
+      <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8 10.5,1.5"/></svg>
+    </div>
+    <div class="ex-title-block">
+      <div class="ex-name">Big Toe Abduction</div>
+      <div class="ex-meta">3 sets × 10 reps · both feet</div>
+    </div>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Sets</div><div class="pill-value">3</div></div>
+        <div class="pill"><div class="pill-label">Reps</div><div class="pill-value">10</div></div>
+        <div class="pill"><div class="pill-label">Rest</div><div class="pill-value">30s</div></div>
+        <div class="pill"><div class="pill-label">Feet</div><div class="pill-value">Both</div></div>
+      </div>
+      <p class="ex-description">Foot flat on the floor. Spread the big toe away from the other toes sideways, then bring it back. Don't let it lift or curl. This one often has the weakest neurological connection -- expect it to take practice.</p>
+      <a class="video-link" href="https://www.youtube.com/shorts/8qHB-z-lfoY" target="_blank">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.3 8.3l-4.7 3c-.1.1-.3.1-.4.1-.1 0-.2 0-.3-.1-.2-.1-.3-.3-.3-.5V5.2c0-.2.1-.4.3-.5.2-.1.4-.1.6 0l4.7 3c.2.1.3.3.3.5s-.1.4-.2.6z"/></svg>
+        Watch video
+      </a>
+    </div>
+  </div>
+</div>
+
+<p class="subgroup">Posterior Tibialis</p>
+
+<!-- Resisted Inversion -->
+<div class="ex" id="ex-4">
+  <div class="ex-header" onclick="toggle(4)">
+    <div class="check" id="cb-4" onclick="event.stopPropagation(); toggleCheck(4)">
+      <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8 10.5,1.5"/></svg>
+    </div>
+    <div class="ex-title-block">
+      <div class="ex-name">Resisted Inversion</div>
+      <div class="ex-meta">3 sets × 15 reps · both feet</div>
+    </div>
+    <span class="badge badge-band">Band needed</span>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Sets</div><div class="pill-value">3</div></div>
+        <div class="pill"><div class="pill-label">Reps</div><div class="pill-value">15</div></div>
+        <div class="pill"><div class="pill-label">Rest</div><div class="pill-value">45s</div></div>
+        <div class="pill"><div class="pill-label">Feet</div><div class="pill-value">Both</div></div>
+      </div>
+      <p class="ex-description">Seated, leg extended, band looped around the forefoot and anchored to the side. Pull the foot inward against the band, slowly return. Keep the movement at the ankle, not the hip. Targets the tibialis posterior directly.</p>
+      <a class="video-link" href="https://www.youtube.com/shorts/fcHS70zPwZQ" target="_blank">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.3 8.3l-4.7 3c-.1.1-.3.1-.4.1-.1 0-.2 0-.3-.1-.2-.1-.3-.3-.3-.5V5.2c0-.2.1-.4.3-.5.2-.1.4-.1.6 0l4.7 3c.2.1.3.3.3.5s-.1.4-.2.6z"/></svg>
+        Watch video
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Arch Doming -->
+<div class="ex" id="ex-5">
+  <div class="ex-header" onclick="toggle(5)">
+    <div class="check" id="cb-5" onclick="event.stopPropagation(); toggleCheck(5)">
+      <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8 10.5,1.5"/></svg>
+    </div>
+    <div class="ex-title-block">
+      <div class="ex-name">Arch Doming (Short Foot)</div>
+      <div class="ex-meta">3 sets × 15 reps · both feet</div>
+    </div>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Sets</div><div class="pill-value">3</div></div>
+        <div class="pill"><div class="pill-label">Reps</div><div class="pill-value">15</div></div>
+        <div class="pill"><div class="pill-label">Rest</div><div class="pill-value">45s</div></div>
+        <div class="pill"><div class="pill-label">Feet</div><div class="pill-value">Both</div></div>
+      </div>
+      <p class="ex-description">Foot flat on the floor. Shorten the foot by drawing the ball of the foot toward the heel, raising the arch. Don't curl the toes -- they stay relaxed and flat. Hold 3 seconds at the top, release slowly.</p>
+      <a class="video-link" href="https://www.youtube.com/shorts/fcHS70zPwZQ" target="_blank">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.3 8.3l-4.7 3c-.1.1-.3.1-.4.1-.1 0-.2 0-.3-.1-.2-.1-.3-.3-.3-.5V5.2c0-.2.1-.4.3-.5.2-.1.4-.1.6 0l4.7 3c.2.1.3.3.3.5s-.1.4-.2.6z"/></svg>
+        Watch video
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Calf Raises (neutral) -->
+<div class="ex" id="ex-6">
+  <div class="ex-header" onclick="toggle(6)">
+    <div class="check" id="cb-6" onclick="event.stopPropagation(); toggleCheck(6)">
+      <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8 10.5,1.5"/></svg>
+    </div>
+    <div class="ex-title-block">
+      <div class="ex-name">Calf Raises (Flat Surface)</div>
+      <div class="ex-meta">3 sets × 15 reps · both feet</div>
+    </div>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="callout callout-warn">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L0 15h16L8 1zm0 4.5c.4 0 .75.34.72.75l-.22 3.5a.5.5 0 01-1 0l-.22-3.5A.72.72 0 018 5.5zM8 13a.9.9 0 110-1.8.9.9 0 010 1.8z"/></svg>
+        Flat surface only -- never off a step. The heel must stay at or above neutral to protect the Achilles insertion.
+      </div>
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Sets</div><div class="pill-value">3</div></div>
+        <div class="pill"><div class="pill-label">Reps</div><div class="pill-value">15</div></div>
+        <div class="pill"><div class="pill-label">Rest</div><div class="pill-value">45s</div></div>
+        <div class="pill"><div class="pill-label">Feet</div><div class="pill-value">Both</div></div>
+      </div>
+      <p class="ex-description">Stand on a flat floor, rise up onto the balls of both feet, hold 1 second, lower slowly back to the floor and no further. Stop if you feel the sharp pain near the Achilles.</p>
+      <a class="video-link" href="https://www.youtube.com/shorts/fcHS70zPwZQ" target="_blank">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.3 8.3l-4.7 3c-.1.1-.3.1-.4.1-.1 0-.2 0-.3-.1-.2-.1-.3-.3-.3-.5V5.2c0-.2.1-.4.3-.5.2-.1.4-.1.6 0l4.7 3c.2.1.3.3.3.5s-.1.4-.2.6z"/></svg>
+        Watch video
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Ball Rolling -->
+<div class="ex" id="ex-7">
+  <div class="ex-header" onclick="toggle(7)">
+    <div class="check" id="cb-7" onclick="event.stopPropagation(); toggleCheck(7)">
+      <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8 10.5,1.5"/></svg>
+    </div>
+    <div class="ex-title-block">
+      <div class="ex-name">Ball Rolling</div>
+      <div class="ex-meta">60–90 sec · both feet · arch only</div>
+    </div>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="callout callout-warn">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L0 15h16L8 1zm0 4.5c.4 0 .75.34.72.75l-.22 3.5a.5.5 0 01-1 0l-.22-3.5A.72.72 0 018 5.5zM8 13a.9.9 0 110-1.8.9.9 0 010 1.8z"/></svg>
+        Roll the arch only. Do not roll over the heel. Stop immediately if you feel sharp pain.
+      </div>
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Time</div><div class="pill-value">60–90s</div></div>
+        <div class="pill"><div class="pill-label">Feet</div><div class="pill-value">Both</div></div>
+        <div class="pill"><div class="pill-label">Kit</div><div class="pill-value">Tennis ball</div></div>
+      </div>
+      <p class="ex-description">Seated, place a tennis ball under your arch. Apply moderate pressure and roll slowly along the arch. Uncomfortable is fine, sharp pain is not. Don't stand on the ball.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ STRENGTH ════════════ -->
+<div class="section-head">
+  <h2>Strength Work</h2>
+  <span class="section-freq">3× per week · Tue, Thu, Sun</span>
+</div>
+
+<!-- Clam Shell -->
+<div class="ex" id="ex-8">
+  <div class="ex-header" onclick="toggle(8)">
+    <div class="check" id="cb-8" onclick="event.stopPropagation(); toggleCheck(8)">
+      <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8 10.5,1.5"/></svg>
+    </div>
+    <div class="ex-title-block">
+      <div class="ex-name">Side Lying Clam Shell</div>
+      <div class="ex-meta">3 sets × 15 reps · each side</div>
+    </div>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Sets</div><div class="pill-value">3</div></div>
+        <div class="pill"><div class="pill-label">Reps</div><div class="pill-value">15</div></div>
+        <div class="pill"><div class="pill-label">Rest</div><div class="pill-value">45s</div></div>
+        <div class="pill"><div class="pill-label">Sides</div><div class="pill-value">Both</div></div>
+      </div>
+      <p class="ex-description">Lie on your side, hips stacked, knees bent, feet together. Rotate the top knee upward like a clamshell opening. Don't let the pelvis roll back. Lower slowly. Targets the glute medius, which directly affects lower limb mechanics when running.</p>
+      <a class="video-link" href="https://www.youtube.com/watch?v=DAAjOdwZdks" target="_blank">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.3 8.3l-4.7 3c-.1.1-.3.1-.4.1-.1 0-.2 0-.3-.1-.2-.1-.3-.3-.3-.5V5.2c0-.2.1-.4.3-.5.2-.1.4-.1.6 0l4.7 3c.2.1.3.3.3.5s-.1.4-.2.6z"/></svg>
+        Watch video
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Standing Wall Clam -->
+<div class="ex" id="ex-9">
+  <div class="ex-header" onclick="toggle(9)">
+    <div class="check" id="cb-9" onclick="event.stopPropagation(); toggleCheck(9)">
+      <svg viewBox="0 0 12 10"><polyline points="1.5,5 4.5,8 10.5,1.5"/></svg>
+    </div>
+    <div class="ex-title-block">
+      <div class="ex-name">Standing Wall Clam</div>
+      <div class="ex-meta">3 sets × 12 reps · each side</div>
+    </div>
+    <span class="badge badge-band">Band needed</span>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="callout callout-warn">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1L0 15h16L8 1zm0 4.5c.4 0 .75.34.72.75l-.22 3.5a.5.5 0 01-1 0l-.22-3.5A.72.72 0 018 5.5zM8 13a.9.9 0 110-1.8.9.9 0 010 1.8z"/></svg>
+        Needs a light resistance band (yellow or red). Until you have one, do the movement bodyweight only.
+      </div>
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Sets</div><div class="pill-value">3</div></div>
+        <div class="pill"><div class="pill-label">Reps</div><div class="pill-value">12</div></div>
+        <div class="pill"><div class="pill-label">Rest</div><div class="pill-value">45s</div></div>
+        <div class="pill"><div class="pill-label">Sides</div><div class="pill-value">Both</div></div>
+      </div>
+      <p class="ex-description">Stand facing a wall, band around the knees. Lift one foot slightly and drive the raised knee outward against the band, keeping hips level. Hold 1 second at the top, lower slowly. More functional than the lying version because it loads the hips in a running-like position.</p>
+      <a class="video-link" href="https://www.youtube.com/shorts/RrMJ_FYzmNo" target="_blank">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.3 8.3l-4.7 3c-.1.1-.3.1-.4.1-.1 0-.2 0-.3-.1-.2-.1-.3-.3-.3-.5V5.2c0-.2.1-.4.3-.5.2-.1.4-.1.6 0l4.7 3c.2.1.3.3.3.5s-.1.4-.2.6z"/></svg>
+        Watch video
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════ ON HOLD ════════════ -->
+<div class="section-head">
+  <h2>On Hold</h2>
+  <span class="section-freq">Confirm with physio first</span>
+</div>
+
+<!-- Knee to Wall -->
+<div class="ex" id="ex-10">
+  <div class="ex-header" onclick="toggle(10)">
+    <div class="ex-title-block" style="margin-left: 36px;">
+      <div class="ex-name">Knee to Wall</div>
+      <div class="ex-meta">Ankle dorsiflexion mobility</div>
+    </div>
+    <span class="badge badge-hold">On hold</span>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="callout callout-hold">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm0 4.5c.4 0 .75.34.72.75l-.22 4a.5.5 0 01-1 0l-.22-4A.72.72 0 018 4.5zM8 12.5a.9.9 0 110-1.8.9.9 0 010 1.8z"/></svg>
+        Do not start until your physio confirms it's safe. This loads the Achilles insertion into dorsiflexion, which can aggravate insertional tendinopathy.
+      </div>
+      <p class="ex-description">Stand facing a wall, toes a set distance away. Push the knee forward to touch the wall, heel flat on the floor. Improves ankle dorsiflexion range. The concern is that this position compresses the Achilles insertion against the heel bone.</p>
+      <a class="video-link" href="https://youtube.com/shorts/-DncYklqUrM" target="_blank">
+        <svg viewBox="0 0 16 16"><path d="M8 0C3.6 0 0 3.6 0 8s3.6 8 8 8 8-3.6 8-8-3.6-8-8-8zm3.3 8.3l-4.7 3c-.1.1-.3.1-.4.1-.1 0-.2 0-.3-.1-.2-.1-.3-.3-.3-.5V5.2c0-.2.1-.4.3-.5.2-.1.4-.1.6 0l4.7 3c.2.1.3.3.3.5s-.1.4-.2.6z"/></svg>
+        Watch video
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Slant Board -->
+<div class="ex" id="ex-11">
+  <div class="ex-header" onclick="toggle(11)">
+    <div class="ex-title-block" style="margin-left: 36px;">
+      <div class="ex-name">Slant Board Isometric Hold</div>
+      <div class="ex-meta">Achilles loading · start 30°</div>
+    </div>
+    <span class="badge badge-hold">On hold</span>
+    <svg class="chevron" width="14" height="8" viewBox="0 0 14 8" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M1 1l6 6 6-6"/></svg>
+  </div>
+  <div class="ex-body">
+    <div class="ex-body-inner">
+      <div class="callout callout-hold">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm0 4.5c.4 0 .75.34.72.75l-.22 4a.5.5 0 01-1 0l-.22-4A.72.72 0 018 4.5zM8 12.5a.9.9 0 110-1.8.9.9 0 010 1.8z"/></svg>
+        Do not use until your physio confirms it's safe. Same dorsiflexion concern as knee to wall. Ask about both at the same time.
+      </div>
+      <div class="protocol">
+        <div class="pill"><div class="pill-label">Start</div><div class="pill-value">30°</div></div>
+        <div class="pill"><div class="pill-label">Sets</div><div class="pill-value">3</div></div>
+        <div class="pill"><div class="pill-label">Hold</div><div class="pill-value">45s</div></div>
+        <div class="pill"><div class="pill-label">Progress</div><div class="pill-value">+5° / 2wk</div></div>
+      </div>
+      <p class="ex-description">Stand on the slant board at 30 degrees with a slight knee bend and hold. No movement. Isometric loading builds tendon tolerance before dynamic work. Progress to 35 degrees after 2 weeks if pain free, then 40, 45, 50.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer-note">
+  <strong>Stop any exercise that reproduces sharp or stabbing pain.</strong> If your right foot goes numb during a run, stop and wiggle or rotate the foot before continuing. If symptoms worsen, rest and contact your physio.
+  <br><br>
+  Prescribed by NHS physiotherapy, 2 June 2026. Next steps: ask physio about knee to wall and slant board; request B12 blood test from GP.
+</div>
+
+</div>
+
+<script>
+  const ACTIVE = 10;
+  const state = Array(ACTIVE).fill(false);
+
+  function toggle(i) {
+    document.getElementById('ex-' + i).classList.toggle('open');
+  }
+
+  function toggleCheck(i) {
+    state[i] = !state[i];
+    document.getElementById('cb-' + i).classList.toggle('checked', state[i]);
+    document.getElementById('ex-' + i).classList.toggle('completed', state[i]);
+    update();
+  }
+
+  function update() {
+    const done = state.filter(Boolean).length;
+    document.getElementById('count').innerHTML = done + '<span> / ' + ACTIVE + '</span>';
+    document.getElementById('bar').style.width = (done / ACTIVE * 100) + '%';
+  }
+
+  function resetAll() {
+    state.fill(false);
+    for (let i = 0; i < ACTIVE; i++) {
+      document.getElementById('cb-' + i).classList.remove('checked');
+      document.getElementById('ex-' + i).classList.remove('completed');
+    }
+    update();
+  }
+</script>
+</body>
+</html>
