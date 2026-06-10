@@ -82,7 +82,12 @@
     border-radius: 12px;
     box-shadow: var(--shadow);
     padding: 20px 24px;
-    margin-bottom: 32px;
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .progress-top {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -90,6 +95,29 @@
   }
 
   .progress-left { flex: 1; }
+
+  .progress-bottom {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .complete-btn {
+    flex: 1;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--green);
+    border: 1px solid var(--green);
+    border-radius: 8px;
+    padding: 9px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+
+  .complete-btn:hover:not(:disabled) { background: #0b8a5e; }
+  .complete-btn:disabled { opacity: 0.4; cursor: default; }
 
   .progress-label {
     font-size: 13px;
@@ -140,6 +168,43 @@
   }
 
   .reset-btn:hover { background: var(--bg); border-color: var(--muted); }
+
+  /* ── Tab ribbon ── */
+  .tab-ribbon {
+    display: flex;
+    gap: 4px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 5px;
+    margin-bottom: 28px;
+    box-shadow: var(--shadow);
+  }
+
+  .tab-btn {
+    flex: 1;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--muted);
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+  }
+
+  .tab-btn.active {
+    background: var(--bg);
+    color: var(--text);
+    box-shadow: 0 1px 3px rgba(16,24,40,0.08);
+  }
+
+  .tab-btn:hover:not(.active) { color: var(--text-2); }
+
+  .tab-panel > .section-head:first-child { margin-top: 0; }
 
   /* ── Section ── */
   .section-head {
@@ -547,18 +612,31 @@
 
 <!-- ── Progress ── -->
 <div class="progress-card">
-  <div class="progress-left">
-    <div class="session-row">
-      <div class="session-chip current" id="sc-0">Session 1</div>
-      <div class="session-chip" id="sc-1">Session 2</div>
+  <div class="progress-top">
+    <div class="progress-left">
+      <div class="session-row">
+        <div class="session-chip current" id="sc-0">Session 1</div>
+        <div class="session-chip" id="sc-1">Session 2</div>
+      </div>
+      <div class="progress-label" id="prog-label">Session 1 of 2</div>
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="bar"></div></div>
     </div>
-    <div class="progress-label" id="prog-label">Session 1 of 2</div>
-    <div class="progress-bar-track"><div class="progress-bar-fill" id="bar"></div></div>
+    <div class="progress-num" id="count">0<span> / 10</span></div>
   </div>
-  <div class="progress-num" id="count">0<span> / 10</span></div>
-  <button class="reset-btn" onclick="resetAll()">Reset</button>
+  <div class="progress-bottom">
+    <button class="complete-btn" id="complete-btn" onclick="completeAllExercises()">Complete Session</button>
+    <button class="reset-btn" onclick="resetAll()">Reset</button>
+  </div>
 </div>
 
+<!-- ── Tab Ribbon ── -->
+<div class="tab-ribbon">
+  <button class="tab-btn active" data-tab="daily" onclick="switchTab('daily')">Daily Rehab</button>
+  <button class="tab-btn" data-tab="strength" onclick="switchTab('strength')">Strength</button>
+  <button class="tab-btn" data-tab="hold" onclick="switchTab('hold')">On Hold</button>
+</div>
+
+<div id="tab-daily" class="tab-panel">
 <!-- ════════════ DAILY REHAB ════════════ -->
 <div class="section-head">
   <h2>Daily Rehab</h2>
@@ -805,6 +883,9 @@
   </div>
 </div>
 
+</div><!-- end tab-daily -->
+
+<div id="tab-strength" class="tab-panel" style="display:none">
 <!-- ════════════ STRENGTH ════════════ -->
 <div class="section-head">
   <h2>Strength Work</h2>
@@ -874,6 +955,9 @@
   </div>
 </div>
 
+</div><!-- end tab-strength -->
+
+<div id="tab-hold" class="tab-panel" style="display:none">
 <!-- ════════════ ON HOLD ════════════ -->
 <div class="section-head">
   <h2>On Hold</h2>
@@ -931,6 +1015,8 @@
     </div>
   </div>
 </div>
+
+</div><!-- end tab-hold -->
 
 <div class="footer-note">
   <strong>Stop any exercise that reproduces sharp or stabbing pain.</strong> If your right foot goes numb during a run, stop and wiggle or rotate the foot before continuing. If symptoms worsen, rest and contact your physio.
@@ -1040,6 +1126,7 @@
   function updateSessionUI() {
     const chips = [document.getElementById('sc-0'), document.getElementById('sc-1')];
     const label = document.getElementById('prog-label');
+    const completeBtn = document.getElementById('complete-btn');
     chips.forEach(function(chip, i) {
       chip.className = 'session-chip';
       if (sessionsComplete[i]) {
@@ -1055,6 +1142,7 @@
     label.textContent = (sessionsComplete[0] && sessionsComplete[1])
       ? 'All done for today!'
       : 'Session ' + (currentSession + 1) + ' of 2';
+    if (completeBtn) completeBtn.disabled = sessionsComplete[currentSession];
   }
 
   function completeSession() {
@@ -1157,7 +1245,6 @@
   }
 
   function resetAll() {
-    // If both sessions done, full day reset; otherwise just reset current session's exercises
     if (sessionsComplete[0] && sessionsComplete[1]) {
       sessionsComplete = [false, false];
       currentSession = 0;
@@ -1165,6 +1252,31 @@
     clearExercises();
     updateSessionUI();
     update();
+  }
+
+  function completeAllExercises() {
+    if (sessionsComplete[currentSession]) return;
+    stopTimer();
+    for (var i = 0; i < ACTIVE; i++) {
+      state[i] = true;
+      document.getElementById('cb-' + i).classList.add('checked');
+      document.getElementById('ex-' + i).classList.add('completed');
+      if (EX[i] && EX[i].sets > 0) {
+        document.querySelectorAll('#dots-' + i + ' .set-dot').forEach(function(d) {
+          d.classList.add('done');
+        });
+      }
+    }
+    update();
+  }
+
+  function switchTab(name) {
+    ['daily', 'strength', 'hold'].forEach(function(t) {
+      document.getElementById('tab-' + t).style.display = (t === name) ? '' : 'none';
+    });
+    document.querySelectorAll('.tab-btn').forEach(function(btn) {
+      btn.classList.toggle('active', btn.dataset.tab === name);
+    });
   }
 </script>
 
