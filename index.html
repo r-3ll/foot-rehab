@@ -504,6 +504,35 @@
   }
 
   .timer-skip:hover { background: rgba(255,255,255,0.15); }
+
+  /* ── Session chips ── */
+  .session-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .session-chip {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 99px;
+    border: 1.5px solid var(--border);
+    color: var(--muted);
+    transition: background 0.2s, border-color 0.2s, color 0.2s;
+  }
+
+  .session-chip.current {
+    border-color: var(--green-bd);
+    background: var(--green-bg);
+    color: var(--green);
+  }
+
+  .session-chip.done {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
 </style>
 </head>
 <body>
@@ -519,7 +548,11 @@
 <!-- ── Progress ── -->
 <div class="progress-card">
   <div class="progress-left">
-    <div class="progress-label">Today's progress</div>
+    <div class="session-row">
+      <div class="session-chip current" id="sc-0">Session 1</div>
+      <div class="session-chip" id="sc-1">Session 2</div>
+    </div>
+    <div class="progress-label" id="prog-label">Session 1 of 2</div>
     <div class="progress-bar-track"><div class="progress-bar-fill" id="bar"></div></div>
   </div>
   <div class="progress-num" id="count">0<span> / 10</span></div>
@@ -925,8 +958,11 @@
   };
 
   let timerInterval = null;
+  let currentSession = 0;
+  let sessionsComplete = [false, false];
+  const STORE = 'foot-rehab-v1';
 
-  // Build set dots
+  // Build set dots then restore saved state
   (function init() {
     for (let i = 0; i < ACTIVE; i++) {
       const cfg = EX[i];
@@ -945,7 +981,109 @@
       }
       block.appendChild(row);
     }
+    restoreState();
+    updateSessionUI();
+    // Refresh counters without re-triggering completeSession for already-saved state
+    const done = state.filter(Boolean).length;
+    document.getElementById('count').innerHTML = done + '<span> / ' + ACTIVE + '</span>';
+    document.getElementById('bar').style.width = (done / ACTIVE * 100) + '%';
   })();
+
+  function persistState() {
+    const setData = {};
+    for (let i = 0; i < ACTIVE; i++) {
+      if (EX[i] && EX[i].sets > 0) {
+        const dots = document.querySelectorAll('#dots-' + i + ' .set-dot');
+        setData[i] = Array.from(dots).map(function(d) { return d.classList.contains('done'); });
+      }
+    }
+    try {
+      localStorage.setItem(STORE, JSON.stringify({
+        date: new Date().toDateString(),
+        state: Array.from(state),
+        currentSession: currentSession,
+        sessionsComplete: sessionsComplete,
+        sets: setData
+      }));
+    } catch(e) {}
+  }
+
+  function restoreState() {
+    try {
+      const raw = localStorage.getItem(STORE);
+      if (!raw) return;
+      const data = JSON.parse(raw);
+      if (data.date !== new Date().toDateString()) return;
+      currentSession = data.currentSession || 0;
+      sessionsComplete = data.sessionsComplete || [false, false];
+      if (data.state) {
+        data.state.forEach(function(done, i) {
+          if (i < ACTIVE && done) {
+            state[i] = true;
+            document.getElementById('cb-' + i).classList.add('checked');
+            document.getElementById('ex-' + i).classList.add('completed');
+          }
+        });
+      }
+      if (data.sets) {
+        Object.keys(data.sets).forEach(function(id) {
+          const doneDots = data.sets[id];
+          const dots = document.querySelectorAll('#dots-' + id + ' .set-dot');
+          doneDots.forEach(function(done, idx) {
+            if (done && dots[idx]) dots[idx].classList.add('done');
+          });
+        });
+      }
+    } catch(e) {}
+  }
+
+  function updateSessionUI() {
+    const chips = [document.getElementById('sc-0'), document.getElementById('sc-1')];
+    const label = document.getElementById('prog-label');
+    chips.forEach(function(chip, i) {
+      chip.className = 'session-chip';
+      if (sessionsComplete[i]) {
+        chip.classList.add('done');
+        chip.textContent = 'Session ' + (i + 1) + ' ✓';
+      } else if (i === currentSession) {
+        chip.classList.add('current');
+        chip.textContent = 'Session ' + (i + 1);
+      } else {
+        chip.textContent = 'Session ' + (i + 1);
+      }
+    });
+    label.textContent = (sessionsComplete[0] && sessionsComplete[1])
+      ? 'All done for today!'
+      : 'Session ' + (currentSession + 1) + ' of 2';
+  }
+
+  function completeSession() {
+    sessionsComplete[currentSession] = true;
+    updateSessionUI();
+    persistState();
+    if (currentSession === 0) {
+      setTimeout(function() {
+        currentSession = 1;
+        clearExercises();
+        updateSessionUI();
+        update();
+      }, 1200);
+    }
+  }
+
+  function clearExercises() {
+    state.fill(false);
+    stopTimer();
+    for (let i = 0; i < ACTIVE; i++) {
+      document.getElementById('cb-' + i).classList.remove('checked');
+      document.getElementById('ex-' + i).classList.remove('completed');
+      if (EX[i] && EX[i].sets > 0) {
+        document.querySelectorAll('#dots-' + i + ' .set-dot').forEach(function(d) {
+          d.classList.remove('done');
+        });
+      }
+    }
+  }
 
   function onSetTap(exId, setIdx) {
     const cfg = EX[exId];
@@ -953,7 +1091,6 @@
     const dot = dots[setIdx];
     if (dot.classList.contains('done')) return;
     dot.classList.add('done');
-
     const allDone = Array.from(dots).every(function(d) { return d.classList.contains('done'); });
     if (allDone) {
       stopTimer();
@@ -970,20 +1107,17 @@
     var barEl = document.getElementById('timer-bar');
     var countEl = document.getElementById('timer-count');
     var overlay = document.getElementById('timer-overlay');
-
     document.getElementById('timer-label').textContent = label;
     countEl.textContent = remaining;
     barEl.style.transition = 'none';
     barEl.style.width = '100%';
     overlay.classList.add('active');
-
     requestAnimationFrame(function() {
       requestAnimationFrame(function() {
         barEl.style.transition = 'width ' + seconds + 's linear';
         barEl.style.width = '0%';
       });
     });
-
     timerInterval = setInterval(function() {
       remaining--;
       countEl.textContent = Math.max(0, remaining);
@@ -1016,20 +1150,20 @@
     const done = state.filter(Boolean).length;
     document.getElementById('count').innerHTML = done + '<span> / ' + ACTIVE + '</span>';
     document.getElementById('bar').style.width = (done / ACTIVE * 100) + '%';
+    persistState();
+    if (done === ACTIVE && !sessionsComplete[currentSession]) {
+      completeSession();
+    }
   }
 
   function resetAll() {
-    state.fill(false);
-    stopTimer();
-    for (let i = 0; i < ACTIVE; i++) {
-      document.getElementById('cb-' + i).classList.remove('checked');
-      document.getElementById('ex-' + i).classList.remove('completed');
-      if (EX[i] && EX[i].sets > 0) {
-        document.querySelectorAll('#dots-' + i + ' .set-dot').forEach(function(d) {
-          d.classList.remove('done');
-        });
-      }
+    // If both sessions done, full day reset; otherwise just reset current session's exercises
+    if (sessionsComplete[0] && sessionsComplete[1]) {
+      sessionsComplete = [false, false];
+      currentSession = 0;
     }
+    clearExercises();
+    updateSessionUI();
     update();
   }
 </script>
