@@ -384,6 +384,126 @@
     .ex-header { padding: 14px 16px; }
     .ex-body-inner { padding: 16px 16px 18px; }
   }
+
+  /* ── Set dots ── */
+  .set-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+
+  .set-dot {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 1.5px solid var(--border-mid);
+    background: var(--card);
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    font-family: inherit;
+    flex-shrink: 0;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .set-dot:hover:not(.done) {
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  .set-dot.done {
+    background: var(--green);
+    border-color: var(--green);
+    color: #fff;
+  }
+
+  /* ── Rest timer overlay ── */
+  .timer-overlay {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--text);
+    color: #fff;
+    z-index: 200;
+    transform: translateY(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
+  }
+
+  .timer-overlay.active { transform: translateY(0); }
+
+  .timer-bar-track {
+    height: 3px;
+    background: rgba(255,255,255,0.12);
+  }
+
+  .timer-bar-fill {
+    height: 100%;
+    background: var(--green);
+    width: 100%;
+  }
+
+  .timer-inner {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 14px 24px 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .timer-info { flex: 1; min-width: 0; }
+
+  .timer-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.45);
+    margin-bottom: 2px;
+  }
+
+  .timer-subtitle {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.75);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .timer-count {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #fff;
+    min-width: 56px;
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .timer-skip {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+  }
+
+  .timer-skip:hover { background: rgba(255,255,255,0.15); }
 </style>
 </head>
 <body>
@@ -791,6 +911,91 @@
   const ACTIVE = 10;
   const state = Array(ACTIVE).fill(false);
 
+  const EX = {
+    0: { sets: 3, rest: 30 },
+    1: { sets: 3, rest: 30 },
+    2: { sets: 3, rest: 30 },
+    3: { sets: 3, rest: 30 },
+    4: { sets: 3, rest: 45 },
+    5: { sets: 3, rest: 45 },
+    6: { sets: 3, rest: 45 },
+    7: { sets: 0, rest: 0 },
+    8: { sets: 3, rest: 45 },
+    9: { sets: 3, rest: 45 },
+  };
+
+  let timerInterval = null;
+
+  // Build set dots
+  (function init() {
+    for (let i = 0; i < ACTIVE; i++) {
+      const cfg = EX[i];
+      if (!cfg || cfg.sets === 0) continue;
+      const block = document.querySelector('#ex-' + i + ' .ex-title-block');
+      const row = document.createElement('div');
+      row.className = 'set-dots';
+      row.id = 'dots-' + i;
+      for (let s = 0; s < cfg.sets; s++) {
+        const btn = document.createElement('button');
+        btn.className = 'set-dot';
+        btn.textContent = s + 1;
+        const si = s, ei = i;
+        btn.addEventListener('click', function(e) { e.stopPropagation(); onSetTap(ei, si); });
+        row.appendChild(btn);
+      }
+      block.appendChild(row);
+    }
+  })();
+
+  function onSetTap(exId, setIdx) {
+    const cfg = EX[exId];
+    const dots = document.querySelectorAll('#dots-' + exId + ' .set-dot');
+    const dot = dots[setIdx];
+    if (dot.classList.contains('done')) return;
+    dot.classList.add('done');
+
+    const allDone = Array.from(dots).every(function(d) { return d.classList.contains('done'); });
+    if (allDone) {
+      stopTimer();
+      if (!state[exId]) toggleCheck(exId);
+    } else {
+      const exName = document.querySelector('#ex-' + exId + ' .ex-name').textContent;
+      startTimer(cfg.rest, exName + ' — set ' + (setIdx + 1) + ' done');
+    }
+  }
+
+  function startTimer(seconds, label) {
+    stopTimer();
+    var remaining = seconds;
+    var barEl = document.getElementById('timer-bar');
+    var countEl = document.getElementById('timer-count');
+    var overlay = document.getElementById('timer-overlay');
+
+    document.getElementById('timer-label').textContent = label;
+    countEl.textContent = remaining;
+    barEl.style.transition = 'none';
+    barEl.style.width = '100%';
+    overlay.classList.add('active');
+
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        barEl.style.transition = 'width ' + seconds + 's linear';
+        barEl.style.width = '0%';
+      });
+    });
+
+    timerInterval = setInterval(function() {
+      remaining--;
+      countEl.textContent = Math.max(0, remaining);
+      if (remaining <= 0) stopTimer();
+    }, 1000);
+  }
+
+  function stopTimer() {
+    if (timerInterval) { clearInterval(timerInterval); timerInterval = null; }
+    document.getElementById('timer-overlay').classList.remove('active');
+  }
+
   function toggle(i) {
     document.getElementById('ex-' + i).classList.toggle('open');
   }
@@ -799,6 +1004,11 @@
     state[i] = !state[i];
     document.getElementById('cb-' + i).classList.toggle('checked', state[i]);
     document.getElementById('ex-' + i).classList.toggle('completed', state[i]);
+    if (!state[i] && EX[i] && EX[i].sets > 0) {
+      document.querySelectorAll('#dots-' + i + ' .set-dot').forEach(function(d) {
+        d.classList.remove('done');
+      });
+    }
     update();
   }
 
@@ -810,12 +1020,31 @@
 
   function resetAll() {
     state.fill(false);
+    stopTimer();
     for (let i = 0; i < ACTIVE; i++) {
       document.getElementById('cb-' + i).classList.remove('checked');
       document.getElementById('ex-' + i).classList.remove('completed');
+      if (EX[i] && EX[i].sets > 0) {
+        document.querySelectorAll('#dots-' + i + ' .set-dot').forEach(function(d) {
+          d.classList.remove('done');
+        });
+      }
     }
     update();
   }
 </script>
+
+<div class="timer-overlay" id="timer-overlay">
+  <div class="timer-bar-track"><div class="timer-bar-fill" id="timer-bar"></div></div>
+  <div class="timer-inner">
+    <div class="timer-info">
+      <div class="timer-title">Rest</div>
+      <div class="timer-subtitle" id="timer-label"></div>
+    </div>
+    <div class="timer-count" id="timer-count">30</div>
+    <button class="timer-skip" onclick="stopTimer()">Skip</button>
+  </div>
+</div>
+
 </body>
 </html>
