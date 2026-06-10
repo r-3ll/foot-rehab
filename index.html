@@ -1105,16 +1105,26 @@
     document.getElementById('count').innerHTML = done + '<span> / ' + ACTIVE + '</span>';
     document.getElementById('bar').style.width = (done / ACTIVE * 100) + '%';
     // Position sliding indicator instantly on load (no animation)
+    moveIndicator(document.querySelector('.tab-btn[data-tab="daily"]'), true);
+  })();
+
+  function moveIndicator(btn, instant) {
+    var ribbon = document.querySelector('.tab-ribbon');
     var ind = document.getElementById('tab-indicator');
-    var initBtn = document.querySelector('.tab-btn[data-tab="daily"]');
-    if (ind && initBtn) {
+    if (!btn || !ind || !ribbon) return;
+    var rRect = ribbon.getBoundingClientRect();
+    var bRect = btn.getBoundingClientRect();
+    if (instant) {
       ind.style.transition = 'none';
-      ind.style.left = initBtn.offsetLeft + 'px';
-      ind.style.width = initBtn.offsetWidth + 'px';
-      ind.offsetHeight; // force reflow before restoring transition
+      ind.offsetHeight;
+    }
+    ind.style.left = (bRect.left - rRect.left) + 'px';
+    ind.style.width = bRect.width + 'px';
+    if (instant) {
+      ind.offsetHeight;
       ind.style.transition = '';
     }
-  })();
+  }
 
   function persistState() {
     const setData = {};
@@ -1318,12 +1328,7 @@
     document.querySelectorAll('.tab-btn').forEach(function(btn) {
       btn.classList.toggle('active', btn.dataset.tab === name);
     });
-    var btn = document.querySelector('.tab-btn[data-tab="' + name + '"]');
-    var ind = document.getElementById('tab-indicator');
-    if (btn && ind) {
-      ind.style.left = btn.offsetLeft + 'px';
-      ind.style.width = btn.offsetWidth + 'px';
-    }
+    moveIndicator(document.querySelector('.tab-btn[data-tab="' + name + '"]'), false);
   }
 </script>
 
