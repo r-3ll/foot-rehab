@@ -992,7 +992,7 @@
     if (allDone) {
       stopTimer();
       if (!state[exId]) toggleCheck(exId);
-    } else {
+    } else if (cfg.rest > 0) {
       const exName = document.querySelector('#ex-' + exId + ' .ex-name').textContent;
       startTimer(cfg.rest, exName + ' — set ' + (setIdx + 1) + ' done');
     }
