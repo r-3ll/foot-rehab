@@ -1017,8 +1017,8 @@
     });
     timerInterval = setInterval(function() {
       remaining--;
-      countEl.textContent = Math.max(0, remaining);
-      if (remaining <= 0) stopTimer();
+      if (remaining <= 0) { stopTimer(); return; }
+      countEl.textContent = remaining;
     }, 1000);
   }
 
